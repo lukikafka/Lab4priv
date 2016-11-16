@@ -11,7 +11,7 @@ public class Main {
 
 	public static void main(String[] args) {
 		//slight change
-		
+		// some comment
 		// read runtime arguments
 		try {
 			Grammar grammar = GrammarUtils.readGrammar(args[0]);
