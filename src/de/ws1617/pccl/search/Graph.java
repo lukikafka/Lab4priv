@@ -11,26 +11,40 @@ import de.ws1617.pccl.grammar.Terminal;
 
 public class Graph {
 
-	// TODO add instance fields here 
+	private ArrayList<HashSet<Edge>> adj;
+	private int v;
+	// for each state indicate whether it is final
+	private boolean[] finalStates;
 	
 	/**
 	 * Initialize the adjacency and final state array.
 	 * 
-	 * @param v
-	 *            the number of vertices in the graph.
+	 * @param v - the number of vertices in the graph.
 	 */
 	public Graph(int v) {
-		// TODO implement me !
+		this.v = v;
+		adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
+		for (int i=0; i < v; i++)
+			adj[i] = new HashSet<Edge>(); //initialize all HashSets to empty
+		for (int j=0; j < v; j++)
+			finalStates[j] = false; //initialize all finale states to false
 	}
 
+	/**
+	 * add an edge from a vertex
+	 * @param from - vertex
+	 * @param edge - an adge to add
+	 */
 	public void addEdge(int from, Edge edge) {
-		// TODO implement me !
+		HashSet<Edge> hashSet = adj.get(from);// get the HashSet
+		hashSet.add(edge); //add the edge
+		adj.add(from, hashSet); //put the new HashSet in the ArrayList
+		
 	}
 
 	public HashSet<Edge> getAdjacent(int from) {
 
-		// TODO implement me !
-		return null;
+		return adj.get(from);
 	}
 
 	/**
@@ -42,8 +56,15 @@ public class Graph {
 	 */
 	public HashSet<Edge> getAdjacent(int from, Terminal toConsume) {
 	
-		// TODO implement me !
-		return null;
+		HashSet<Edge> getAdj = adj.get(from); //HashSet of all edges that point from the current state
+		HashSet<Edge> result = new HashSet<Edge>(); //result HashSet
+		for (Edge e : getAdj)
+		{
+			Terminal t = e.getTerminal();
+			if (t.equals(toConsume))
+				result.add(e);
+		}
+		return result;
 	}
 
 	/**
@@ -51,7 +72,7 @@ public class Graph {
 	 * @param index 
 	 */
 	public void setFinalState(int index) {
-		// TODO implement me !
+		finalStates[index] = true;
 	}
 
 	/**
@@ -60,7 +81,6 @@ public class Graph {
 	 * @return
 	 */
 	public boolean isFinalState(int index) {
-		// TODO implement me !
-		return false;
+		return finalStates[index];
 	}
 }
