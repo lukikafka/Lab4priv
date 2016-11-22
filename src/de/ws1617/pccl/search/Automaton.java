@@ -26,13 +26,22 @@ public class Automaton {
 
 	public Automaton(Grammar grammar, Lexicon lexicon, NonTerminal startSymbol) {
 		super();
+		
+		this.startSymbol = startSymbol; 
 
 		// TODO create the union of the nonterminals from lexicon and grammar
-		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals() + lexicon.getNonTerminals();
+		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals();
+        allNonTerminals.addAll(lexicon.getNonTerminals());
+		nonTerminals = new ArrayList<> ();
+		nonTerminals.add(startSymbol);
+		allNonTerminals.remove(startSymbol);
+		nonTerminals.addAll(allNonTerminals);
+		
 
 		// TODO create a graph based on the grammar and lexicon
 		// attention: how many states do you need ?
-		graph = new Graph (allNonTerminals.size() + 1); //plus one final state
+		graph = new Graph (allNonTerminals.size() + 1); //a state for every nonterminal plus one final state
+		addRules (grammar, lexicon);
 	}
 
 	/**
@@ -42,10 +51,12 @@ public class Automaton {
 	 * @return
 	 */
 	public boolean recognize(String input) {
+		
+		Hypothesis first = new Hypothesis (0, 0);
+		ArrayList<Hypothesis> listHyp = new ArrayList<>();
+				listHyp = successors (first, initialize(input));
 
-		// TODO implement me !
-
-		return false;
+		return isFinalState(listHyp.get(listHyp.size()-1), initialize(input));
 	}
 
 	/**
@@ -57,8 +68,29 @@ public class Automaton {
 	 */
 	private ArrayList<Hypothesis> successors(Hypothesis h, ArrayList<Terminal> input) {
 
-		// TODO implement me !
-		return null;
+		ArrayList<Hypothesis> result = new ArrayList<>();
+		agenda = new Stack<>();
+		agenda.push(h); //add the first hypothesis to the agenda
+		int inputIndex = h.getInputIndex();
+		while (!agenda.isEmpty())
+		{
+			result.add(agenda.peek()); //add the hypothesis to the result array list
+			h = agenda.pop();
+			if (inputIndex < input.size())
+			{
+			HashSet<Edge> edges = graph.getAdjacent(h.getState(), input.get(inputIndex)); //check if there are successors
+			if (!edges.isEmpty())
+			{
+				for (Edge edge : edges)
+				{
+					h = new Hypothesis (edge.getGoal(), inputIndex+1);
+					agenda.push(h);
+				}
+			}
+			inputIndex++;
+			}
+		}
+		return result;
 	}
 
 	/**
@@ -93,8 +125,8 @@ public class Automaton {
 	 * @return
 	 */
 	public boolean isFinalState(Hypothesis h, List<Terminal> input) {
-		// TODO implement me !
-		return false;
+		
+		return (graph.isFinalState(h.getState()) && (h.getInputIndex()==(input.size()-1)));
 	}
 
 	/**
@@ -108,7 +140,31 @@ public class Automaton {
 	 */
 	public void addRules(Grammar gr, Lexicon lex) {
 
-		// TODO implement me !
+		for (int i = 0; i < nonTerminals.size(); i++) //for every NonTerminal
+		{
+			HashSet<ArrayList<Symbol>> lhs = gr.getRuleForLHS (nonTerminals(i)); // get grammar derivations for the NonTerminal
+			
+			for (ArrayList<Symbol> list : lhs) //for every derivation
+			{
+				Symbol terminal = list.get(0);
+				Symbol nonterminal = list.get(1);
+				Edge edge = new Edge (nonTerminals.indexOf(nonterminal), (Terminal) terminal); //create an edge for the rule
+				graph.addEdge (i,edge);	
+			}
+			
+			HashSet<ArrayList<Terminal>> term = lex.getRules (nonTerminals.get(i)); //get lexical rules
+			
+			if (term != null)
+			{
+				for (ArrayList<Terminal> list : term) //for every rule
+				{
+					Terminal thisTerminal = list.get(0);
+					Edge edge = new Edge (nonTerminals.size(), thisTerminal); //greate an edge to the final state
+					graph.addEdge (i, edge); //add the edge to the final state
+					graph.setFinalState(nonTerminals.size()); //set the state final
+				}
+			}
+		}
 
 	}
 
