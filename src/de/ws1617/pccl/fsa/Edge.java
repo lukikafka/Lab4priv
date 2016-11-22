@@ -29,5 +29,9 @@ public class Edge {
 		super();
 	}
 	
+	public int getGoal ()
+	{
+		return goal;
+	}
 	
 }

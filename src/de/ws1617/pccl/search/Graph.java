@@ -27,7 +27,7 @@ public class Graph {
 		for (int i=0; i < v; i++)
 			adj.add(i, new HashSet<Edge>()); //initialize all HashSets to empty
 		for (int j=0; j < v; j++)
-			finalStates[j] = false; //initialize all finale states to false
+			finalStates[j] = false; //initialize all states to false
 	}
 
 	/**
