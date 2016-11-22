@@ -28,9 +28,11 @@ public class Automaton {
 		super();
 
 		// TODO create the union of the nonterminals from lexicon and grammar
+		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals() + lexicon.getNonTerminals();
 
 		// TODO create a graph based on the grammar and lexicon
 		// attention: how many states do you need ?
+		graph = new Graph (allNonTerminals.size() + 1); //plus one final state
 	}
 
 	/**
@@ -68,9 +70,17 @@ public class Automaton {
 	 * @return a list of terminals based on the input s split by whitespaces.
 	 */
 	private ArrayList<Terminal> initialize(String s) {
-
-		// TODO implement me !
-		return null;
+		
+		String [] splited = s.split(" ");
+		ArrayList<Terminal> result = new ArrayList<>();
+		for (int i = 0; i < splited.length; i++)
+		{
+			Terminal t = new Terminal (splited[i]);
+			result.add(i, t);
+		}
+			
+		return result;
+		
 	}
 
 	/**
