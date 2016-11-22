@@ -25,7 +25,7 @@ public class Graph {
 		this.v = v;
 		adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
 		for (int i=0; i < v; i++)
-			adj[i] = new HashSet<Edge>(); //initialize all HashSets to empty
+			adj.add(i, new HashSet<Edge>()); //initialize all HashSets to empty
 		for (int j=0; j < v; j++)
 			finalStates[j] = false; //initialize all finale states to false
 	}
@@ -36,14 +36,10 @@ public class Graph {
 	 * @param edge - an adge to add
 	 */
 	public void addEdge(int from, Edge edge) {
-		HashSet<Edge> hashSet = adj.get(from);// get the HashSet
-		hashSet.add(edge); //add the edge
-		adj.add(from, hashSet); //put the new HashSet in the ArrayList
-		
+		adj.get(from).add(edge);// add the HashSet
 	}
 
 	public HashSet<Edge> getAdjacent(int from) {
-
 		return adj.get(from);
 	}
 

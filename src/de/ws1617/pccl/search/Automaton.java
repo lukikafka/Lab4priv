@@ -27,11 +27,10 @@ public class Automaton {
 	public Automaton(Grammar grammar, Lexicon lexicon, NonTerminal startSymbol) {
 		super();
 
-		// TODO create the union of the nonterminals from lexicon and grammar
-		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals() + lexicon.getNonTerminals();
-
-		// TODO create a graph based on the grammar and lexicon
-		// attention: how many states do you need ?
+		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals();
+		allNonTerminals.addAll(lexicon.getNonTerminals());
+		System.out.println(allNonTerminals);
+		
 		graph = new Graph (allNonTerminals.size() + 1); //plus one final state
 	}
 
