@@ -25,9 +25,10 @@ public class Graph {
 		this.v = v;
 		adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
 		for (int i=0; i < v; i++)
-			adj[i] = new HashSet<Edge>(); //initialize all HashSets to empty
+			adj.add(i,new HashSet<>()); //initialize all HashSets to empty
+		finalStates = new boolean[v];
 		for (int j=0; j < v; j++)
-			finalStates[j] = false; //initialize all finale states to false
+			finalStates[j] = false; //initialize all states to false
 	}
 
 	/**

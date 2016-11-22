@@ -25,5 +25,9 @@ public class Edge {
 		return toConsume;
 	}
 	
+	public int getGoal ()
+	{
+		return goal;
+	}
 	
 }
