@@ -24,6 +24,10 @@ public class Edge {
 	{
 		return toConsume;
 	}
+
+	public Edge() {
+		super();
+	}
 	
 	
 }
