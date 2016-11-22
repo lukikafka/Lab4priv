@@ -31,7 +31,6 @@ public class Automaton {
 
 		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals();
 		allNonTerminals.addAll(lexicon.getNonTerminals());
-		System.out.println(allNonTerminals);
 		
 		graph = new Graph (allNonTerminals.size() + 1); //a state for every nonterminal plus one final state
 		addRules (grammar, lexicon);
@@ -135,7 +134,7 @@ public class Automaton {
 
 		for (int i = 0; i < nonTerminals.size(); i++) //for every NonTerminal
 		{
-			HashSet<ArrayList<Symbol>> lhs = gr.getRuleForLHS (nonTerminals(i)); // get grammar derivations for the NonTerminal
+			HashSet<ArrayList<Symbol>> lhs = gr.getRuleForLHS (nonTerminals.get(i)); // get grammar derivations for the NonTerminal
 			
 			for (ArrayList<Symbol> list : lhs) //for every derivation
 			{
