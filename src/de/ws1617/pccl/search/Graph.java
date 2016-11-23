@@ -23,12 +23,12 @@ public class Graph {
 	 */
 	public Graph(int v) {
 		this.v = v;
-		adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
-		for (int i=0; i < v; i++)
+		this.finalStates = new boolean[v];
+		this.adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
+		for (int i=0; i < v; i++){
 			adj.add(i, new HashSet<Edge>()); //initialize all HashSets to empty
-		for (int j=0; j < v; j++)
-			finalStates[j] = false; //initialize all states to false
-	}
+			this.finalStates[i] = false; //initialize all states to false
+	}}
 
 	/**
 	 * add an edge from a vertex

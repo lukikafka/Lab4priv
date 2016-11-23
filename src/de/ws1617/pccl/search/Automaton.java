@@ -31,7 +31,8 @@ public class Automaton {
 
 		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals();
 		allNonTerminals.addAll(lexicon.getNonTerminals());
-		
+		this.nonTerminals = new ArrayList<NonTerminal>();
+		nonTerminals.addAll(allNonTerminals);
 		graph = new Graph (allNonTerminals.size() + 1); //a state for every nonterminal plus one final state
 		addRules (grammar, lexicon);
 	}
@@ -43,7 +44,8 @@ public class Automaton {
 	 * @return
 	 */
 	public boolean recognize(String input) {
-		
+		ArrayList<Terminal> processedInput = new ArrayList<Terminal>(initialize(input));
+		System.out.println(processedInput);
 		Hypothesis first = new Hypothesis (0, 0);
 		ArrayList<Hypothesis> listHyp = new ArrayList<>();
 				listHyp = successors (first, initialize(input));

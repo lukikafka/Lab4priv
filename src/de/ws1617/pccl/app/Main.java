@@ -21,6 +21,7 @@ public class Main {
 			NonTerminal startSymbol = new NonTerminal("[S]");
 			//String input = args[3];
 			Automaton auto = new Automaton(grammar,lexicon,startSymbol);
+			auto.recognize("This is a sentence.");
 			// TODO create grammar, lexicon, start symbol
 
 			// TODO create an Automaton object
