@@ -17,20 +17,19 @@ public class Main {
 		//Input via args[0] usw
 		try {
 			// TODO create grammar, lexicon, start symbol
-			Grammar grammar = GrammarUtils.readGrammar("input/grammar.txt");
-			Lexicon lexicon = GrammarUtils.readLexicon("input/lexicon.txt");
-			NonTerminal startSymbol = new NonTerminal("[S]");
-			String input = args[3];
-			
+			Grammar grammar = GrammarUtils.readGrammar(args[0]); // reads the path of the grammar
+			Lexicon lexicon = GrammarUtils.readLexicon(args[1]); // reads the path of the lexicon
+			NonTerminal startSymbol = new NonTerminal(args[2]); // reads the startSymbol
+			String input = args[3]; // reads the user input sentence
 			
 			
 
-			// TODO create an Automaton object
+			// create an Automaton object
 			Automaton auto = new Automaton(grammar,lexicon,startSymbol);
 
-			// TODO print out whether the given input is in the language
+			// print out whether the given input is in the language
 			
-			if (obj.recognize(input)==true)
+			if (auto.recognize(input)==true)
                 System.out.println("ACCEPTED");
             else
                 System.out.println("NOT ACCEPTED");

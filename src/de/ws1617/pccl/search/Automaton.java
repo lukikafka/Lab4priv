@@ -46,15 +46,21 @@ public class Automaton {
 	 * @param input
 	 * @return
 	 */
-	public boolean recognize(String input) {
-		
+	public boolean recognize(String input){
 		Hypothesis first = new Hypothesis (0, 0);
-		ArrayList<Hypothesis> listHyp = new ArrayList<>();
-				listHyp = successors (first, initialize(input));
-
-		return isFinalState(listHyp.get(listHyp.size()-1), initialize(input));
+		agenda = new Stack<>();
+		agenda.addAll(successors(first,initialize(input))); //adds all successors of the first hypothesis
+		while (!agenda.isEmpty()){ // while  loop till the agenda with hypothesises is emtpy 
+			Hypothesis h = agenda.pop();
+			if (isFinalState(h,initialize(input))) // checks if hypothesis is final state
+				return true; // returns true if so
+			for (Hypothesis workH:successors(h,initialize(input))){ //goes over all hypothesises from the successors
+				if (workH.getInputIndex()<=initialize(input).size()) //checks if the actuall index is lower or equal to the size of words
+					agenda.add(workH);
+			}
+		}
+		return false;
 	}
-
 	/**
 	 * Generates all successors for a given hypothesis and input.
 	 * 
@@ -65,42 +71,20 @@ public class Automaton {
 	private ArrayList<Hypothesis> successors(Hypothesis h, ArrayList<Terminal> input) {
 
 		ArrayList<Hypothesis> result = new ArrayList<>();
-		agenda = new Stack<>();
-		agenda.push(h); //add the first hypothesis to the agenda
-		int inputIndex = h.getInputIndex();
-		while (!agenda.isEmpty())
+		Hypothesis workingHyp = h; // stores the actual hypothesis in a new variable
+		int inputIndex = workingHyp.getInputIndex(); //stores the index of the actuall hypothesis
+		if (inputIndex < input.size()) //checks if the index is before the end of the sentence
 		{
-			result.add(agenda.peek()); //add the hypothesis to the result array list
-			h = agenda.pop();
-			if (inputIndex < input.size())
+		HashSet<Edge> edges = graph.getAdjacent(workingHyp.getState(), input.get(inputIndex)); //check if there are successors
+		if (!edges.isEmpty()) // checks if there are edges to process
+		{
+
+			for (Edge edge : edges)
 			{
-			HashSet<Edge> edges = graph.getAdjacent(h.getState(), input.get(inputIndex)); //check if there are successors
-			if (!edges.isEmpty())
-			{
-				for (Edge edge : edges)
-				{
-                                    if (graph.isFinalState(edge.getGoal())) //if we reached the final state, check if there are remaining non-terminals
-                                    {
-                                        if (inputIndex != input.size()-1) //if there are still non-terminals in the input left
-                                            inputIndex++;
-                                        else
-                                        {
-                                            h = new Hypothesis (edge.getGoal(), inputIndex); //if it is the last non-terminal from the input
-                                            agenda.push(h);
-                                            inputIndex++;
-                                        }
-                                        
-                                    }
-                                    else
-                                    {
-                                    inputIndex++;
-				    h = new Hypothesis (edge.getGoal(), inputIndex);
-				    agenda.push(h);
-                                    }
-				}
+				workingHyp = new Hypothesis (edge.getGoal(), inputIndex+1);//create a new hypothesis 
+				result.add(workingHyp);//add the hypothesis as a successor
 			}
-			}
-		}
+		}}
 		return result;
 	}
 
@@ -118,7 +102,7 @@ public class Automaton {
 		ArrayList<Terminal> result = new ArrayList<>();
 		for (int i = 0; i < splited.length; i++)
 		{
-			Terminal t = new Terminal (splited[i]);
+			Terminal t = new Terminal (splited[i].toLowerCase());
 			result.add(i, t);
 		}
 			
@@ -137,7 +121,7 @@ public class Automaton {
 	 */
 	public boolean isFinalState(Hypothesis h, List<Terminal> input) {
 		
-		return (graph.isFinalState(h.getState()) && (h.getInputIndex()==(input.size()-1)));
+		return (graph.isFinalState(h.getState()) && (h.getInputIndex()==(input.size())));
 	}
 
 	/**
@@ -160,7 +144,7 @@ public class Automaton {
 				Symbol terminal = list.get(0);
 				Symbol nonterminal = list.get(1);
 				Edge edge = new Edge (nonTerminals.indexOf(nonterminal), (Terminal) terminal); //create an edge for the rule
-				graph.addEdge (i,edge);	
+				graph.addEdge(i,edge);	
 			}
 			
 			HashSet<ArrayList<Terminal>> term = lex.getRules (nonTerminals.get(i)); //get lexical rules

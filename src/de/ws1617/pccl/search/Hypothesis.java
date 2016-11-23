@@ -16,6 +16,11 @@ public class Hypothesis {
 		return state;
 	}
 	
+	@Override
+	public String toString() {
+		return "Hypothesis [state=" + state + ", inputIndex=" + inputIndex + "]";
+	}
+
 	public int getInputIndex ()
 	{
 		return inputIndex;

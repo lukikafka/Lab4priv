@@ -55,17 +55,15 @@ public class Graph {
 		
 		HashSet<Edge> result = new HashSet<Edge>(); //result HashSet
 		if (from < adj.size()) {
-	    HashSet<Edge> getAdj = adj.get(from); //HashSet of all edges that point from the current state
-		
-		for (Edge e : getAdj)
+		for (Edge e : adj.get(from))
 		{
 			Terminal t = e.getTerminal();
-			if (t.equals(toConsume))
+			if (t.equals(toConsume)){
 				result.add(e);
+			}
 		}
 		
 		}
-		
 		return result;
 	}
 
@@ -74,8 +72,8 @@ public class Graph {
 	 * @param index 
 	 */
 	public void setFinalState(int index) {
-		if (finalStates.length > index)
-		finalStates[index] = true;
+		if (finalStates.length > index){
+		finalStates[index] = true;}
 	}
 
 	/**
