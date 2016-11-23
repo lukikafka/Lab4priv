@@ -23,12 +23,13 @@ public class Graph {
 	 */
 	public Graph(int v) {
 		this.v = v;
-		this.finalStates = new boolean[v];
-		this.adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
-		for (int i=0; i < v; i++){
+		adj = new ArrayList<HashSet<Edge>>(v); //for each vertex there is a HashSet of edges
+		for (int i=0; i < v; i++)
 			adj.add(i, new HashSet<Edge>()); //initialize all HashSets to empty
-			this.finalStates[i] = false; //initialize all states to false
-	}}
+		finalStates = new boolean [v];
+		for (int j=0; j < v; j++)
+			finalStates[j] = false; //initialize all states to false
+	}
 
 	/**
 	 * add an edge from a vertex
@@ -51,15 +52,20 @@ public class Graph {
 	 * @return a set of edges adjacent to the from state reachable via the terminal toConsume.
 	 */
 	public HashSet<Edge> getAdjacent(int from, Terminal toConsume) {
-	
-		HashSet<Edge> getAdj = adj.get(from); //HashSet of all edges that point from the current state
+		
 		HashSet<Edge> result = new HashSet<Edge>(); //result HashSet
+		if (from < adj.size()) {
+	    HashSet<Edge> getAdj = adj.get(from); //HashSet of all edges that point from the current state
+		
 		for (Edge e : getAdj)
 		{
 			Terminal t = e.getTerminal();
 			if (t.equals(toConsume))
 				result.add(e);
 		}
+		
+		}
+		
 		return result;
 	}
 
@@ -68,6 +74,7 @@ public class Graph {
 	 * @param index 
 	 */
 	public void setFinalState(int index) {
+		if (finalStates.length > index)
 		finalStates[index] = true;
 	}
 
@@ -77,6 +84,9 @@ public class Graph {
 	 * @return
 	 */
 	public boolean isFinalState(int index) {
-		return finalStates[index];
+		 if (finalStates.length > index)
+				return finalStates[index];
+		            
+		 return false;
 	}
 }

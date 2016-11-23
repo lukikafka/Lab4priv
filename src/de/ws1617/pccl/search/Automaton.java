@@ -31,9 +31,12 @@ public class Automaton {
 
 		Set<NonTerminal> allNonTerminals = grammar.getNonTerminals();
 		allNonTerminals.addAll(lexicon.getNonTerminals());
-		this.nonTerminals = new ArrayList<NonTerminal>();
-		nonTerminals.addAll(allNonTerminals);
-		graph = new Graph (allNonTerminals.size() + 1); //a state for every nonterminal plus one final state
+		nonTerminals = new ArrayList<>();
+        nonTerminals.add(startSymbol);
+        allNonTerminals.remove(startSymbol);
+        nonTerminals.addAll(allNonTerminals);
+		
+		graph = new Graph (nonTerminals.size() + 1); //a state for every nonterminal plus one final state
 		addRules (grammar, lexicon);
 	}
 
@@ -44,8 +47,7 @@ public class Automaton {
 	 * @return
 	 */
 	public boolean recognize(String input) {
-		ArrayList<Terminal> processedInput = new ArrayList<Terminal>(initialize(input));
-		System.out.println(processedInput);
+		
 		Hypothesis first = new Hypothesis (0, 0);
 		ArrayList<Hypothesis> listHyp = new ArrayList<>();
 				listHyp = successors (first, initialize(input));
@@ -77,11 +79,26 @@ public class Automaton {
 			{
 				for (Edge edge : edges)
 				{
-					h = new Hypothesis (edge.getGoal(), inputIndex+1);
-					agenda.push(h);
+                                    if (graph.isFinalState(edge.getGoal())) //if we reached the final state, check if there are remaining non-terminals
+                                    {
+                                        if (inputIndex != input.size()-1) //if there are still non-terminals in the input left
+                                            inputIndex++;
+                                        else
+                                        {
+                                            h = new Hypothesis (edge.getGoal(), inputIndex); //if it is the last non-terminal from the input
+                                            agenda.push(h);
+                                            inputIndex++;
+                                        }
+                                        
+                                    }
+                                    else
+                                    {
+                                    inputIndex++;
+				    h = new Hypothesis (edge.getGoal(), inputIndex);
+				    agenda.push(h);
+                                    }
 				}
 			}
-			inputIndex++;
 			}
 		}
 		return result;
